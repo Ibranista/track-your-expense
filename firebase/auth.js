@@ -14,3 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { useState } from "react";
+import { createContext, useContext } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+
+const AuthUserContext = createContext({
+  authUser: null,
+  isLoading: true,
+});
+
+export default function useFirebaseAuth() {
+  const [authUser, setAuthUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const authStateChanged = async (user) => {
+    if (!user) {
+      setAuthUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    setAuthUser({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+    });
+    
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, authStateChanged);
+      return () => unsubscribe();
+    }, []);
+
+    return {
+      authUser,
+      isLoading,
+    };
+  };
+}
+
+export function AuthUserProvider({ children }) {
+  return (
+    <AuthUserContext.Provider value={auth}>{children}</AuthUserContext.Provider>
+  );
+}
+
+export const useAuth = () => useContext(AuthUserContext);
