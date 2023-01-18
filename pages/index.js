@@ -15,16 +15,36 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { EmailAuthProvider, GoogleAuthProvider } from 'firebase/auth';
-import { Button, CircularProgress, Container, Dialog, Typography } from '@mui/material';
-import { auth } from '../firebase/firebase';
-import styles from '../styles/landing.module.scss';
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { EmailAuthProvider, GoogleAuthProvider } from "firebase/auth";
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Dialog,
+  Typography,
+} from "@mui/material";
+import { auth } from "../firebase/firebase";
+import styles from "../styles/landing.module.scss";
+
+const REDIRECT_PAGE = "/dashboard";
+
+// to use firebaseUI we need some sortof configuration
+const uiConfig = {
+  signInFlow: "popup", //pop up instead of redirection.
+  signINSuccessUrl: REDIRECT_PAGE,
+  signInOptions: [
+    GoogleAuthProvider.PROVIDER_ID,
+    EmailAuthProvider.PROVIDER_ID,
+  ],
+};
 
 export default function Home() {
   const router = useRouter();
+  const [login, setLogin] = useState(false);
 
   return (
     <div>
@@ -35,13 +55,23 @@ export default function Home() {
       <main>
         <Container className={styles.container}>
           <Typography variant="h1">Welcome to Expense Tracker!</Typography>
-          <Typography variant="h2">Add, view, edit, and delete expenses</Typography>
+          <Typography variant="h2">
+            Add, view, edit, and delete expenses
+          </Typography>
           <div className={styles.buttons}>
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setLogin(true)}
+            >
               Login / Register
             </Button>
           </div>
+          <Dialog open={login} onClose={() => setLogin(false)}>
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+          </Dialog>
         </Container>
       </main>
-    </div>);
+    </div>
+  );
 }
