@@ -15,12 +15,20 @@
  * limitations under the License.
  */
 
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material';
-import { useAuth } from '../firebase/auth';
-import styles from '../styles/navbar.module.scss';
-
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { useAuth } from "../firebase/auth";
+import styles from "../styles/navbar.module.scss";
 export default function NavBar() {
-
+  console.log(useAuth());
+  const userInfo = useAuth().currentUser;
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" className={styles.appbar}>
@@ -31,12 +39,13 @@ export default function NavBar() {
             </Typography>
             <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                Insert user email here
+                {userInfo?.email}
               </Typography>
               <Button variant="text" color="secondary">
                 Logout
               </Button>
             </Stack>
+            {userInfo?.displayName}
           </Container>
         </Toolbar>
       </AppBar>

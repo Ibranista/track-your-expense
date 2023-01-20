@@ -28,7 +28,6 @@ const AuthUserContext = createContext({
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const authStateChanged = async (user) => {
     if (!user) {
       setAuthUser(null);
@@ -42,7 +41,7 @@ export default function useFirebaseAuth() {
       displayName: user.displayName,
       photoURL: user.photoURL,
     });
-    
+
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, authStateChanged);
       return () => unsubscribe();
