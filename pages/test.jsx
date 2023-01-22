@@ -1,25 +1,21 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useContext } from "react";
+import { NameContext } from "./_app";
 import Test1 from "./test1";
+import { theNames } from "./_app";
 export const MYContext = createContext();
-function Test({ children }) {
-  const [test, setTest] = useState(true);
-  const toggle = () => {
-    setTest((prevState) => !prevState);
-  };
-  let values = {
-    test,
-    toggle,
-  };
+function Test({ name }) {
+  let nameCollections = theNames();
+  const { names, graduation } = useContext(NameContext);
   return (
     <>
-      <MYContext.Provider value={values}>
-        <Test1 />
-      </MYContext.Provider>
-      {children}
+      <h1>Test</h1>
+      <h1>{name}</h1>
+      <h1>my name is: {names}</h1>
+      <h1>my graduation is: {graduation}</h1>
+      <hr />
+      <h1>name:{nameCollections.names}</h1>
     </>
   );
 }
-
-// explain {child}
 
 export default Test;

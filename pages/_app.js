@@ -22,15 +22,28 @@ import { theme } from "../styles/theme.js";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { AuthUserProvider } from "../firebase/auth";
+import { createContext, useContext } from "react";
+export const NameContext = createContext({
+  names: "Ibrahim",
+  graduation: "Bsc. Computer Science",
+});
 
 export default function App({ Component, pageProps }) {
+  let names = {
+    names: "Ibrahim",
+    graduation: "Bsc. Computer Science",
+  };
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <AuthUserProvider>
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <NameContext.Provider value={names}>
+            <Component {...pageProps} name="ibrahim" />
+          </NameContext.Provider>
         </ThemeProvider>
       </AuthUserProvider>
     </LocalizationProvider>
   );
 }
+
+export const theNames = () => useContext(NameContext);

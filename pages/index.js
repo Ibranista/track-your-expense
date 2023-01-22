@@ -19,7 +19,12 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import { EmailAuthProvider, GoogleAuthProvider } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import {
   Button,
   CircularProgress,
@@ -29,7 +34,6 @@ import {
 } from "@mui/material";
 import { auth } from "../firebase/firebase";
 import styles from "../styles/landing.module.scss";
-
 const REDIRECT_PAGE = "/dashboard";
 
 // to use firebaseUI we need some sortof configuration
@@ -41,11 +45,49 @@ const uiConfig = {
     EmailAuthProvider.PROVIDER_ID,
   ],
 };
-
 export default function Home() {
   const router = useRouter();
-  const [login, setLogin] = useState(false);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    router.push("/dashboaard");
+  };
+  const [login, setLogin] = useState(false);
+  const [user, setUser] = useState("");
+
+  const loginWithGoogle = async (e) => {
+    e.preventDefault();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      setUser(result.user);
+    });
+  };
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const loginWithEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      setUser(userCredential.user);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(error);
+    }
+  };
+  if (user) {
+    router.push("/dashboard");
+  }
   return (
     <div>
       <Head>
@@ -53,6 +95,7 @@ export default function Home() {
       </Head>
 
       <main>
+        <button onClick={handleClick}>click me</button>
         <Container className={styles.container}>
           <Typography variant="h1">Welcome to Expense Tracker!</Typography>
           <Typography variant="h2">
@@ -68,10 +111,28 @@ export default function Home() {
             </Button>
           </div>
           <Dialog open={login} onClose={() => setLogin(false)}>
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+            {/* <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} /> */}
+            <h1>Hello Ibrahim</h1>
+            <button onClick={loginWithGoogle}>Login with Google</button>
+            <form action="">
+              <input
+                type="email"
+                name="email"
+                placeholder="email"
+                onChange={handleChange}
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                onChange={handleChange}
+              />
+              <button onClick={loginWithEmail}>Login with Email</button>
+            </form>
           </Dialog>
         </Container>
       </main>
+      <section></section>
     </div>
   );
 }

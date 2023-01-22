@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createContext, useContext } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
 import { auth } from "./firebase";
 
 const AuthUserContext = createContext({
@@ -34,27 +34,34 @@ export default function useFirebaseAuth() {
       setIsLoading(false);
       return;
     }
-
     setAuthUser({
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
+      // displayName: user.displayName,
+      // photoURL: user.photoURL,
+    });
+    setIsLoading(false);
+  };
+  const signOut = () =>
+    authSignOut(auth).then(() => {
+      setAuthUser(null);
+      setIsLoading(false);
     });
 
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, authStateChanged);
-      return () => unsubscribe();
-    }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, authStateChanged);
+    return () => unsubscribe();
+  }, []);
 
-    return {
-      authUser,
-      isLoading,
-    };
+  return {
+    authUser,
+    isLoading,
+    signOut,
   };
 }
 
 export function AuthUserProvider({ children }) {
+  const auth = useFirebaseAuth();
   return (
     <AuthUserContext.Provider value={auth}>{children}</AuthUserContext.Provider>
   );
