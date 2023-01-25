@@ -4,7 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "emulator": "firebase emulators:start --only auth"
+    "emulator": "firebase emulators:start"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.13.1",
