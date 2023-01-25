@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "emulator": "firebase emulators:start --only auth"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.13.1",

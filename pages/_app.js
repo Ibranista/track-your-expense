@@ -23,12 +23,16 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { AuthUserProvider } from "../firebase/auth";
 import { createContext, useContext } from "react";
+import { connectAuthEmulator } from "firebase/auth";
+import { auth } from "../firebase/firebase";
 export const NameContext = createContext({
   names: "Ibrahim",
   graduation: "Bsc. Computer Science",
 });
 
 export default function App({ Component, pageProps }) {
+  // connectAuthEmulator(auth, "http://localhost:9099");
+
   let names = {
     names: "Ibrahim",
     graduation: "Bsc. Computer Science",

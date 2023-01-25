@@ -105,7 +105,7 @@ export default function Home() {
   const { isLoading } = useAuth();
   console.log("loading state: ", isLoading);
 
-  return !authUser ? (
+  return user ? (
     <CircularProgress
       color="inherit"
       sx={{ marginLeft: "50%", marginTop: "25%" }}
