@@ -96,14 +96,21 @@ export default function Home() {
       alert(error);
     }
   };
-  if (user) {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user]);
 
   const { isLoading } = useAuth();
   console.log("loading state: ", isLoading);
 
-  return (
+  return !authUser ? (
+    <CircularProgress
+      color="inherit"
+      sx={{ marginLeft: "50%", marginTop: "25%" }}
+    />
+  ) : (
     <div>
       <Head>
         <title>Expense Tracker</title>
