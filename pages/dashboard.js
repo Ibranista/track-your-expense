@@ -94,7 +94,11 @@ export default function Dashboard() {
   };
 
   // Listen to changes for loading and authUser, redirect if needed
-  useEffect(() => {}, [authUser, isLoading]);
+  useEffect(() => {
+    if (!isLoading && !authUser) {
+      router.push("/");
+    }
+  }, [authUser, isLoading]);
 
   // For all of the onClick functions, update the action and fields for updating
 
