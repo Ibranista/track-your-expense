@@ -34,6 +34,7 @@ import {
 } from "@mui/material";
 import { auth } from "../firebase/firebase";
 import styles from "../styles/landing.module.scss";
+import { useAuth } from "../firebase/auth";
 const REDIRECT_PAGE = "/dashboard";
 
 // to use firebaseUI we need some sortof configuration
@@ -57,11 +58,21 @@ export default function Home() {
 
   const loginWithGoogle = async (e) => {
     e.preventDefault();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      setUser(result.user);
-    });
+    if (navigator.onLine) {
+      try {
+        const provider = new GoogleAuthProvider();
+
+        signInWithPopup(auth, provider).then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          setUser(result.user);
+          console.log("successful");
+        });
+      } catch (error) {
+        alert(`problem logging in please try again!`);
+      }
+    } else {
+      alert("check your internet connection and try again");
+    }
   };
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -88,6 +99,10 @@ export default function Home() {
   if (user) {
     router.push("/dashboard");
   }
+
+  const { isLoading } = useAuth();
+  console.log("loading state: ", isLoading);
+
   return (
     <div>
       <Head>

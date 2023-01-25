@@ -27,8 +27,9 @@ import {
 import { useAuth } from "../firebase/auth";
 import styles from "../styles/navbar.module.scss";
 export default function NavBar() {
-  const userInfo = useAuth().currentUser;
-  const { authUser } = useAuth();
+  const { authUser, signOut, isLoading } = useAuth();
+  console.log(isLoading);
+  let userInfo = authUser;
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" className={styles.appbar}>
@@ -45,7 +46,6 @@ export default function NavBar() {
                 Logout
               </Button>
             </Stack>
-            {userInfo?.displayName}
           </Container>
         </Toolbar>
       </AppBar>
