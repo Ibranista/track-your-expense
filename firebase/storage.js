@@ -28,7 +28,7 @@ const BUCKET_URL = "gs://expense-tracker-98856.appspot.com";
 
 export async function uploadImage(image, uID) {
   const formattedDate = format(new Date(), "yyyy-MM-dd-HH-mm-ss");
-  const bucket = `${BUCKET_URL}/${uID}/${formattedDate}.jpg`;
+  const bucket = `${BUCKET_URL}/${uID}/${formattedDate}`;
   const storageRef = ref(storage, bucket);
   await uploadBytes(storageRef, image);
   return bucket;
